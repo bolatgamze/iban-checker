@@ -3,6 +3,7 @@ import java.util.*;
 
 public class IBANChecker {
 
+    // Länder-Codes mit der erwarteten IBAN-Länge
     private static final Map<String, Integer> chars = new HashMap<>();
 
     static {
@@ -14,12 +15,14 @@ public class IBANChecker {
         chars.put("FR", 27);
     }
 
+    // Einstiegspunkt
     public static void main(String[] args) {
         String iban = "DE22790200760027913168";
-        System.out.println("Welcome to the IBAN Checker!");
-        System.out.println("IBAN " + iban + " is " + validate(iban));
+        System.out.println("Willkommen beim IBAN Checker!");
+        System.out.println("IBAN " + iban + " ist " + validate(iban));
     }
 
+    // Prüft, ob eine IBAN gültig ist
     public static boolean validate(String iban) {
         if (!checkLength(iban)) {
             return false;
@@ -32,6 +35,7 @@ public class IBANChecker {
         return calculate(segments) == 1;
     }
 
+    // Berechnet Modulo-97
     private static int calculate(List<String> segments) {
         long n = 0;
         for (String segment : segments) {
@@ -45,11 +49,13 @@ public class IBANChecker {
         return (int) n;
     }
 
+    // Überprüft Länge je nach Land
     private static boolean checkLength(String iban) {
         String countryCode = iban.substring(0, 2);
         return chars.containsKey(countryCode) && chars.get(countryCode) == iban.length();
     }
 
+    // Wandelt Buchstaben in Zahlen um (A=10 ... Z=35)
     private static String convertToInteger(String iban) {
         StringBuilder convertedIban = new StringBuilder();
         String upperIban = iban.toUpperCase();
@@ -65,6 +71,7 @@ public class IBANChecker {
         return convertedIban.toString();
     }
 
+    // Teilt IBAN in kleinere Segmente
     private static List<String> createSegments(String iban) {
         List<String> segments = new ArrayList<>();
         String remainingIban = iban;
@@ -81,6 +88,7 @@ public class IBANChecker {
         return segments;
     }
 
+    // Verschiebt die ersten 4 Zeichen nach hinten
     private static String rearrangeIban(String iban) {
         return iban.substring(4) + iban.substring(0, 4);
     }
